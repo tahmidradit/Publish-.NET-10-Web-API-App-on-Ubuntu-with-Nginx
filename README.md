@@ -151,4 +151,4 @@ Nginx profiles (recommended)
 *** After any change in nginx:
 > sudo nginx -s reload
 
-> DONE ! Now check your site using mobile data or from a different network from your premises
+DONE ! Now check your site using mobile data or from a different network from your premises
