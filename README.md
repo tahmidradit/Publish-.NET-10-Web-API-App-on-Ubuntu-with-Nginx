@@ -2,14 +2,18 @@
 
 ## Step 1: Install .NET 10 Runtime
 
-> sudo apt-get update && \ sudo apt-get install -y aspnetcore-runtime-10.0
+> sudo apt-get update
+
+> sudo apt-get install -y aspnetcore-runtime-10.0
         
 ### Verify installation:
 > dotnet --list-runtimes
         
 ##  Step 2: Install Nginx
 
-> sudo apt update -y && sudo apt install nginx
+> sudo apt update -y
+ 
+> sudo apt install nginx
         
 ### Verify installation:
 > sudo systemctl status nginx
@@ -35,7 +39,7 @@
 ## Step 4: Create systemd Service for .NET App
 > sudo nano /etc/systemd/system/myapp.service
        
-### Copy-paste Service Configuration and replace according to your own:
+### Copy-paste Service Configuration and edit according to your own:
        
        [Unit]
        Description=Your message/title
@@ -68,7 +72,7 @@
 ## Step 5: Configure Nginx Reverse Proxy
 > sudo nano /etc/nginx/sites-available/myapp
 
-### Copy-paste Nginx Configuration and replace according to your own:
+### Copy-paste Nginx Configuration and edit according to your own:
         
         map $http_connection $connection_upgrade {
           "Upgrade" $http_connection;
@@ -106,6 +110,7 @@
           proxy_set_header X-Forwarded-Proto $scheme;
         }
       }
+      
 ### Save and exit: 
 > Ctrl+S, Ctrl+X
      
@@ -119,9 +124,13 @@
 
 ### Health Checks:
 > sudo service nginx status
+
 > sudo service nginx stop
+
 > sudo service nginx restart
+
 > sudo nginx -s reload
+
 > sudo service nginx status
         
 ## Step 7: Install SSL (HTTPS) with Let's Encrypt
@@ -131,12 +140,14 @@
 
 ### Generate and apply SSL certificates:
 > sudo certbot --nginx -d myapp.com
+
 > sudo certbot --nginx -d www.myapp.com
 
 ## Step 8: Configure Firewall for public access (UFW – Uncomplicated Firewall)
 
 ### Install UFW:
 > sudo apt update
+
 > sudo apt install ufw
 
 ### Allow SSH Access (CRITICAL) 
