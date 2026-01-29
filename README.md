@@ -2,36 +2,36 @@
 
 Step 1: Install .NET 10 Runtime
 
-        > sudo apt-get update && \ sudo apt-get install -y aspnetcore-runtime-10.0
+> sudo apt-get update && \ sudo apt-get install -y aspnetcore-runtime-10.0
         
-        Verify installation:
-        > dotnet --list-runtimes
+Verify installation:
+> dotnet --list-runtimes
         
 Step 2: Install Nginx
 
-        > sudo apt update -y && sudo apt install nginx
+> sudo apt update -y && sudo apt install nginx
         
-        Verify installation:
-        > sudo systemctl status nginx
+Verify installation:
+> sudo systemctl status nginx
         
-        Health Checks:
-        > sudo service nginx status
-        > sudo service nginx stop
-        > sudo service nginx restart
-        > sudo nginx -s reload
-        > sudo nginx -t
+Health Checks:
+> sudo service nginx status
+> sudo service nginx stop
+> sudo service nginx restart
+> sudo nginx -s reload
+> sudo nginx -t
         
 Step 3: Copy Publish Files
 
-        Create publish folder
-        > sudo mkdir -p /var/www/myapp
+Create publish folder
+> sudo mkdir -p /var/www/myapp
         
-        Transfer files in your ubuntu server directory using WinSCP/FileZilla
+Transfer files in your ubuntu server directory using WinSCP/FileZilla
         
 Step 4: Create systemd Service for .NET App
-       > sudo nano /etc/systemd/system/myapp.service
+> sudo nano /etc/systemd/system/myapp.service
        
-       Copy-paste Service Configuration and replace according to your own:
+Copy-paste Service Configuration and replace according to your own:
        
        [Unit]
        Description=Your message/title
@@ -51,18 +51,18 @@ Step 4: Create systemd Service for .NET App
        [Install]
        WantedBy=multi-user.target
 
-       Save and exit: 
-       Ctrl+S, Ctrl+X
+Save and exit: 
+> Ctrl+S, Ctrl+X
        
-       Health Checks:
-       > sudo systemctl status myapp.service
-       > sudo systemctl enable myapp.service
-       > sudo systemctl start myapp.service
+Health Checks:
+> sudo systemctl status myapp.service
+> sudo systemctl enable myapp.service
+> sudo systemctl start myapp.service
 
 Step 5: Configure Nginx Reverse Proxy
-        > sudo nano /etc/nginx/sites-available/myapp
+> sudo nano /etc/nginx/sites-available/myapp
 
-        Copy-paste Nginx Configuration and replace according to your own:
+Copy-paste Nginx Configuration and replace according to your own:
         
         map $http_connection $connection_upgrade {
           "Upgrade" $http_connection;
@@ -100,51 +100,54 @@ Step 5: Configure Nginx Reverse Proxy
           proxy_set_header X-Forwarded-Proto $scheme;
         }
       }
-      
+Save and exit: 
+> Ctrl+S, Ctrl+X
+     
 Step 6: Enable Site & Restart Nginx
 
-        Create Symlink
-        > sudo ln -s /etc/nginx/sites-available/myapp /etc/nginx/sites-enabled/myapp
+Create Symlink
+> sudo ln -s /etc/nginx/sites-available/myapp /etc/nginx/sites-enabled/myapp
         
-        Test Nginx configuration:
-        > sudo nginx -t
+Test Nginx configuration:
+> sudo nginx -t
 
-        Health Checks:
-        > sudo service nginx status
-        > sudo service nginx stop
-        > sudo service nginx restart
-        > sudo nginx -s reload
-        > sudo service nginx status
+Health Checks:
+> sudo service nginx status
+> sudo service nginx stop
+> sudo service nginx restart
+> sudo nginx -s reload
+> sudo service nginx status
         
 Step 7: Install SSL (HTTPS) with Let's Encrypt
 
-        Install Certbot
-        > sudo apt install certbot python3-certbot-nginx
+Install Certbot
+> sudo apt install certbot python3-certbot-nginx
 
-        Generate and apply SSL certificates:
-        > sudo certbot --nginx -d myapp.com
-        > sudo certbot --nginx -d www.myapp.com
+Generate and apply SSL certificates:
+> sudo certbot --nginx -d myapp.com
+> sudo certbot --nginx -d www.myapp.com
 
 Step 8: Configure Firewall for public access (UFW – Uncomplicated Firewall)
 
-        Install UFW:
-        > sudo apt update
-        > sudo apt install ufw
+Install UFW:
+> sudo apt update
+> sudo apt install ufw
 
-        Allow SSH Access (CRITICAL) 
-        > sudo ufw allow OpenSSH
+Allow SSH Access (CRITICAL) 
+> sudo ufw allow OpenSSH
         
-        Allow Web Traffic (HTTP) 
-        > sudo ufw allow 80
+Allow Web Traffic (HTTP) 
+> sudo ufw allow 80
         
-        Allow Web Traffic (HTTPS) 
-        > sudo ufw allow 443
+Allow Web Traffic (HTTPS) 
+> sudo ufw allow 443
         
-        Nginx profiles (recommended) 
-        > sudo ufw allow 'Nginx Full'
+Nginx profiles (recommended) 
+> sudo ufw allow 'Nginx Full'
 
-*** After any new site/api deployment/publish files change:
-        > sudo systemctl restart myapp.service
+*** After any publish file change:
+> sudo systemctl restart myapp.service
+
 *** After any change in nginx:
 > sudo nginx -s reload
 
