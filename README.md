@@ -16,9 +16,13 @@ Verify installation:
         
 Health Checks:
 > sudo service nginx status
+
 > sudo service nginx stop
+
 > sudo service nginx restart
+
 > sudo nginx -s reload
+
 > sudo nginx -t
         
 Step 3: Copy Publish Files
