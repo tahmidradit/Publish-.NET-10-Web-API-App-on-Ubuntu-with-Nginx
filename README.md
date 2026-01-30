@@ -40,24 +40,24 @@
 > sudo nano /etc/systemd/system/myapp.service
        
 ### Copy-paste Service Configuration and edit according to your own:
-       
-       [Unit]
-       Description=Your message/title
-       After=network.target
-       
-       [Service]
-       WorkingDirectory=/var/www/myapp
-       ExecStart=/usr/bin/dotnet /var/www/myapp/myapp.dll
-       Restart=always
-       RestartSec=10
-       KillSignal=SIGINT
-       SyslogIdentifier=dotnet-example
-       User=www-data
-       Environment=ASPNETCORE_ENVIRONMENT=Production
-       Environment=DOTNET_NOLOGO=true
 
-       [Install]
-       WantedBy=multi-user.target
+[Unit]
+Description=Your message/title
+After=network.target
+       
+[Service]
+WorkingDirectory=/var/www/myapp
+ExecStart=/usr/bin/dotnet /var/www/myapp/myapp.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=dotnet-example
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_NOLOGO=true
+
+[Install]
+WantedBy=multi-user.target
 
 ### Save and exit: 
 > Ctrl+S, Ctrl+X
@@ -73,42 +73,40 @@
 > sudo nano /etc/nginx/sites-available/myapp
 
 ### Copy-paste Nginx Configuration and edit according to your own:
-        
-        map $http_connection $connection_upgrade {
-          "Upgrade" $http_connection;
-          default keep-alive;
-        }
 
-        server {
-          server_name myapp.com;
+map $http_connection $connection_upgrade {
+  "Upgrade" $http_connection;
+  default keep-alive;
+}
 
-          location / {
-            proxy_pass http://127.0.0.1:5000/;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection $connection_upgrade;
-            proxy_set_header Host $host;
-            proxy_cache_bypass $http_upgrade;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-          }
-        }
+server {
+  server_name   myapp.com;
+  location / {
+      proxy_pass         http://127.0.0.1:5000/;
+      proxy_http_version 1.1;
+      proxy_set_header   Upgrade $http_upgrade;
+      proxy_set_header   Connection $connection_upgrade;
+      proxy_set_header   Host $host;
+      proxy_cache_bypass $http_upgrade;
+      proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header   X-Forwarded-Proto $scheme;
+  }
+}
 
-      server {
-        server_name www.myapp.com;
+server {
+  server_name   www.myapp.com;
+  location / {
+      proxy_pass         http://127.0.0.1:5000/;
+      proxy_http_version 1.1;
+      proxy_set_header   Upgrade $http_upgrade;
+      proxy_set_header   Connection $connection_upgrade;
+      proxy_set_header   Host $host;
+      proxy_cache_bypass $http_upgrade;
+      proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header   X-Forwarded-Proto $scheme;
+  }
+}
 
-        location / {
-          proxy_pass http://127.0.0.1:5000/;
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
-          proxy_set_header Host $host;
-          proxy_cache_bypass $http_upgrade;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
-        }
-      }
-      
 ### Save and exit: 
 > Ctrl+S, Ctrl+X
      
